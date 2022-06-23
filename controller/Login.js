@@ -15,7 +15,7 @@ class Login{
         req.on('end', () => {
             const product = qs.parse(data);
             this.log.loginQuery(product.loginEmail,product.loginPass).then(dataDB =>{
-                if(dataDB.length > 0){
+                if(dataDB.length > 0 && dataDB[0].roleId === 1){
                     res.writeHead(301, {Location: 'http://localhost:8080/admin/home'});
                     res.end();
                 }else{

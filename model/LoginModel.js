@@ -18,9 +18,9 @@ class LoginModel {
         })
     }
 
-    signUpQuery(name, email, password, role) {
+    signUpQuery(name, email, password) {
         return new Promise((resolve, reject)=>{
-            let sql = `INSERT INTO users(name,email,password,roleID) VALUES ('${name}', '${email}', '${password}', ${role})`;
+            let sql = `INSERT INTO users(name,email,password,roleID) VALUES ('${name}', '${email}', '${password}', 2)`;
             this.con.query(sql, (err, data)=>{
                 if(err){
                     reject(err);

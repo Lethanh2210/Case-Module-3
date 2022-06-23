@@ -46,7 +46,7 @@ class AdminModel{
 
     addBookQuery(name,author,status,type,price,sl){
         return new Promise((resolve, reject)=>{
-            let sql = `INSERT INTO book(name,author,status,type,price,sl) VALUES ('${name}', '${author}', '${status}','${type}', ${price}, ${sl})`;
+            let sql = `INSERT INTO book(name,author,status,type,price,SL) VALUES ('${name}', '${author}', '${status}','${type}', ${price}, ${sl})`;
             this.con.query(sql, (err, data)=>{
                 if(err){
                     reject(err);

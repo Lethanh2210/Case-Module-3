@@ -9,8 +9,6 @@ const path1 = require('node:path');
 let server = http.createServer(function (req, res) {
     let parseUrl = url.parse(req.url, true);
     let path = parseUrl.pathname;
-    let a = path1.basename(path, '');
-    console.log(a);
     let trimPath = path.replace(/^\/+|\/+$/g, '');
     let chosenHandler = (typeof (router[trimPath]) !== 'undefined') ? router[trimPath] : handlers.notFound;
     chosenHandler(req, res);
