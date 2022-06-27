@@ -76,12 +76,20 @@ class Admin{
                             </td>`
                     html += '</tr>'
                 })
-                data = data.replace('{cart}', `${cartClient.length}`);
-                data = data.replace('{list-product}', html);
-                data = data.replace('{type}', typeDB);
-                res.writeHead(200, {'Content-Type': 'text/html'});
-                res.write(data);
-                res.end();
+                fs.readFile('./token/cart/' + 'cart' + '.txt',(err, data1) => {
+                    data1 = (data1).toString();
+                    if(data1 === ''){
+                        data = data.replace('{cart}', `0`);
+                    }else{
+                        data = data.replace('{cart}', `${cartClient.length}`);
+                    }
+                    data = data.replace('{list-product}', html);
+                    data = data.replace('{type}', typeDB);
+                    res.writeHead(200, {'Content-Type': 'text/html'});
+                    res.write(data);
+                    res.end();
+                })
+
             })
         })
     }

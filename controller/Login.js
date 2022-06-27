@@ -21,6 +21,7 @@ class Login {
                 nameCookie = (JSON.parse(cookies.user)).session_name_file;
                 fs.exists('./token/login' + nameCookie + '.txt', (exists) => {
                     if (exists) {
+
                         res.writeHead(301, {location: '/admin/home'});
                         res.end();
                     } else {
@@ -55,7 +56,8 @@ class Login {
                         })
                         //tao cookie
                         let cookieLogin = {
-                            session_name_file: nameFile
+                            session_name_file: nameFile,
+                            id: this.currentUser
                         }
                         res.setHeader('Set-Cookie', cookie.serialize('user', JSON.stringify(cookieLogin)));
                         // console.log(result[0].roleId);

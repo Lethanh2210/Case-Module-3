@@ -64,7 +64,6 @@ handlers.add = function (req, res) {
 
 
 handlers.login = function (req, res) {
-    this.carts = [];
     log.login(req, res);
 }
 
@@ -94,6 +93,7 @@ handlers.logOut = function (req, res) {
     let fileName = JSON.parse(cookieClient);
     authContr.deleteTokenSession(fileName.session_name_file);
     cart.carts = [];
+    cart.deleteCart(req,res);
     res.setHeader('set-cookie', 'user=; max-age=0; cart=; max-age=0');
     // res.setHeader('set-cookie', 'cart=; max-age=0');
     res.writeHead(301, {'Location': '/login'});
@@ -130,8 +130,13 @@ handlers.supOrder = function (req, res) {
 }
 
 handlers.confirmCart = function (req, res) {
-    cart.sendCart(req, res,log.currentUser);
+    let cookieClient = (cookie.parse(req.headers.cookie || '')).user;
+    let fileName = JSON.parse(cookieClient);
+    let idUser = fileName.id;
+    cart.sendCart(req, res,idUser);
     cart.carts = [];
+   // return res.end("da them vao cart" );
+
 }
 
 handlers.orders = function (req, res) {

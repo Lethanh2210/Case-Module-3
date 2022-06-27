@@ -1,1 +1,0 @@
-{"session_name_file":1656291406398,"data_user_login":{"id":1,"name":"admin","email":"admin@gmail.com","roleId":1,"password":"123"}}

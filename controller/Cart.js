@@ -9,12 +9,12 @@ class Cart {
         this.user = new UserModel();
     }
 
-    addToCart(req,res) {
+    addToCart(req, res) {
         const urlPath = url.parse(req.url, true);
         let queryString = urlPath.query;
         let bookId = queryString.id;
         let type = queryString.type;
-        this.user.getBookById(bookId).then(dataDB =>{
+        this.user.getBookById(bookId).then(dataDB => {
             let product = {
                 id: dataDB[0].id,
                 name: dataDB[0].name,
@@ -28,7 +28,7 @@ class Cart {
         })
     }
 
-    cartSession(req,res,data){
+    cartSession(req, res, data) {
         let nameFile = 'cart';
         //tao session login
         let sessionLogin = {
@@ -69,31 +69,46 @@ class Cart {
         })
 
     }
+    deleteCart(req, res) {
+        fs.writeFile('./token/cart/' + 'cart' + '.txt', '', err => {
+            if (err) {
+                throw new Error(err.message);
+            }
+        })
+    }
 
     deleteTokenSession = function (fileName) {
-        fileName = './token/cart/' + fileName +'.txt';
+        fileName = './token/cart/' + fileName + '.txt';
         fs.unlink(fileName, err => {
             if (err) throw err;
             console.log('File deleted!');
         });
     }
 
-    sendCart(req,res,id){
+    sendCart(req, res, id) {
         let totalPrice = 0;
         this.carts.forEach((item, index) => {
             totalPrice += item.price;
         })
-        this.user.pushOrder(Date.now().toString(), totalPrice, id).then(data => {
-            this.carts.forEach((item, index) => {
-                this.user.pushOrderDetails(item.id);
+
+        let cart = [...this.carts]
+
+        this.user.pushOrder(Date.now().toString(), totalPrice, id)
+            .then(() => {
+
+                return this.user.pushOrderDetails(cart)
             })
-            res.writeHead(301, {'Location': 'http://localhost:8080/user/home'})
-            res.end();
-        });
+            .then(() => {
+                this.deleteCart(req,res);
+                res.writeHead(301, {'Location': 'http://localhost:8080/user/home'})
+                res.end();
+            })
+            .catch(err => {
+                console.log(err.message);
+            });
+
+
     }
-
-
-
 }
 
 module.exports = Cart;

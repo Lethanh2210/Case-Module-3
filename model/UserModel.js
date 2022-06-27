@@ -25,22 +25,46 @@ class UserModel{
                 if(err){
                     reject(err);
                 }else{
-                    resolve(data);
+                    resolve();
                 }
             })
         })
     }
 
-    pushOrderDetails(pId){
-        this.takeIdOrder().then((data)=>{
-            let sql = `INSERT INTO orderdetail (oId, pId) VALUES (${data[0].id}, ${pId})`;
-            this.con.query(sql, (err, data1)=>{
+    pushOrderDetails(carts){
+        return new Promise((resolve, reject)=>{
+            this.takeIdOrder()
+                .then((data)=>{
+                carts.forEach(item=>{
+                    let sql = `INSERT INTO orderdetail (oId, pId) VALUES (${data[0].id}, ${item.id})`;
+                    console.log(sql);
+                    this.con.query(sql, (err, data1)=>{
+                        if(err){
+                            reject(err);
+                        }else{
+                            resolve();
+                        }
+                    })
+                })
+
+            })
+                .catch((err)=>{
+
+                })
+        })
+    }
+
+    pushOrd(oid,pid){
+        return new Promise((resolve, reject)=>{
+            let sql = `INSERT INTO orderdetail (oId, pId) VALUES (${oid}, ${pid})` ;
+            this.con.query(sql, (err, data)=>{
                 if(err){
-                    throw new Error(err.message);
+                    reject(err);
+                }else{
+                    resolve(data);
                 }
             })
         })
-
     }
 
     takeIdOrder(){
