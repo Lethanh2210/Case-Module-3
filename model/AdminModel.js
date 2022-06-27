@@ -69,6 +69,45 @@ class AdminModel{
             })
         })
     }
+
+    getOrderList(){
+        return new Promise((resolve, reject)=>{
+            let sql = "SELECT * FROM orders ";
+            this.con.query(sql, (err, data)=>{
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(data);
+                }
+            })
+        })
+    }
+
+    deleteOrder(id){
+        return new Promise((resolve, reject)=>{
+            let sql = `DELETE FROM orders WHERE id = ${id}`;
+            this.con.query(sql, (err, data)=>{
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(data);
+                }
+            })
+        })
+    }
+
+    deleteOrderDetail(id){
+        return new Promise((resolve, reject)=>{
+            let sql = `DELETE FROM orderdetail WHERE oId = ${id}`;
+            this.con.query(sql, (err, data)=>{
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(data);
+                }
+            })
+        })
+    }
 }
 
 module.exports = AdminModel;

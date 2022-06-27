@@ -1,0 +1,1 @@
+{"session_name_file":"cart","data_user_login":[{"id":1,"name":"onePiece","price":10000,"SL":1},{"id":1,"name":"onePiece","price":10000,"SL":1},{"id":1,"name":"onePiece","price":10000,"SL":1},{"id":2,"name":"abc","price":100000,"SL":1},{"id":2,"name":"abc","price":100000,"SL":1}]}

@@ -10,6 +10,7 @@ class Login {
         this.log = new LoginModel();
         this.authContr = new AuthController();
         this.admin = new Admin();
+        this.currentUser = 0;
     }
 
     login(req, res) {
@@ -17,8 +18,8 @@ class Login {
             let cookies = cookie.parse(req.headers.cookie || '');
             let nameCookie = '';
             if (cookies.user) {
-                nameCookie = (JSON.parse(cookies.user)).sessionId
-                fs.exists('./token/' + nameCookie + '.txt', (exists) => {
+                nameCookie = (JSON.parse(cookies.user)).session_name_file;
+                fs.exists('./token/login' + nameCookie + '.txt', (exists) => {
                     if (exists) {
                         res.writeHead(301, {location: '/admin/home'});
                         res.end();
@@ -29,8 +30,6 @@ class Login {
             } else {
                 this.admin.showPageLogin(req,res);
             }
-            // this.showPage(req, res, './views/login.html');
-
         }else{
             let data = '';
             req.on('data', chunk => {
@@ -39,6 +38,7 @@ class Login {
             req.on('end', () => {
                 let Data = qs.parse(data);
                 this.log.loginQuery(Data.loginEmail, Data.loginPass).then(result => {
+                    this.currentUser = result[0].id;
                     if (result.length > 0) {
                         //tao luu file session
                         let nameFile = Date.now();
@@ -48,7 +48,7 @@ class Login {
                             'data_user_login': result[0]
                         };
                         //ghi file
-                        fs.writeFile('./token/' + nameFile + '.txt', JSON.stringify(sessionLogin), err => {
+                        fs.writeFile('./token/login/' + nameFile + '.txt', JSON.stringify(sessionLogin), err => {
                             if (err) {
                                 throw new Error(err.message);
                             }
@@ -58,16 +58,16 @@ class Login {
                             session_name_file: nameFile
                         }
                         res.setHeader('Set-Cookie', cookie.serialize('user', JSON.stringify(cookieLogin)));
-                        console.log(result[0].roleId);
+                        // console.log(result[0].roleId);
                         if (result[0].roleId === 1) {
                             res.writeHead(301, {location: '/admin/home'})
                             res.end();
                         } else if (result[0].roleId === 2) {
-                            res.writeHead(301, {location: '/login'});
+                            res.writeHead(301, {location: '/user/home'});
                             res.end();
                         }
                     } else {
-                        fs.readFile('./view/login.html', 'utf-8', (err, data) => {
+                        fs.readFile('./view/login-SignUp/login.html', 'utf-8', (err, data) => {
                             if (err) {
                                 throw new Error(err.message);
                             } else {
